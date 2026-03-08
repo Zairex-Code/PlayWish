@@ -1,6 +1,7 @@
 import './style.css'
 import navbarHTML from './layouts/navbar.html?raw'; // vite brings HTML Files as strings only adding "?raw"
 import backgroundDashboardHTML from './layouts/background-dashboard.html?raw';
+import jumbotronHTML from './layouts/jumbotron-dashboard.html?raw';
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -21,4 +22,15 @@ document.addEventListener('DOMContentLoaded', () => {
   if (BackGroundContainer){
     BackGroundContainer.innerHTML = backgroundDashboardHTML;
   }
+
+  // 3. Inject the junbotron-dashboard
+  // We search for the container by it's class (class="jumbotron-dashboard") in the index HTML
+  const jumbotronContainer = document.querySelector('.jumbotron-dashboard');
+
+  // If the container exists on the current page, we inject the html inside it.
+  if(jumbotronContainer){
+    jumbotronContainer.innerHTML = jumbotronHTML;
+  }
+
+
 });
