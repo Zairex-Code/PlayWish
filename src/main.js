@@ -1,36 +1,98 @@
 import './style.css'
-import navbarHTML from './layouts/navbar.html?raw'; // vite brings HTML Files as strings only adding "?raw"
-import backgroundDashboardHTML from './layouts/background-dashboard.html?raw';
-import jumbotronHTML from './layouts/jumbotron-dashboard.html?raw';
-
+import navbarHTML from './layouts/dashboard/navbar.html?raw';
+import backgroundDashboardHTML from './layouts/dashboard/background-dashboard.html?raw';
+import jumbotronHTML from './layouts/dashboard/jumbotron-dashboard.html?raw';
+import chartCardsHTML from './layouts/dashboard/chart-cards.html?raw';
+import carouselDashboardHTML from './layouts/dashboard/carousel-dashboard.html?raw';
 
 document.addEventListener('DOMContentLoaded', () => {
-  //1. Inject the navbar
-
-  // We search for the container by its class (class="navbar-content" in index.html)
+  // 1. Inject the Navbar
   const navbarContainer = document.querySelector('.navbar-content');
-
-  // If the container exists on the current page, we inject the HTML inside it
   if (navbarContainer) {
     navbarContainer.innerHTML = navbarHTML;
   }
 
-  // 2. inject the background image
-  // We search for the container by its class (class="background-dashboard" in index.html)
+  // 2. Inject the Background Dashboard
   const BackGroundContainer = document.querySelector('.background-dashboard');
-  // If the container exists on the current page, we inject the HTML inside it
   if (BackGroundContainer){
     BackGroundContainer.innerHTML = backgroundDashboardHTML;
   }
 
-  // 3. Inject the junbotron-dashboard
-  // We search for the container by it's class (class="jumbotron-dashboard") in the index HTML
+  // 3. Inject the Jumbotron Component
   const jumbotronContainer = document.querySelector('.jumbotron-dashboard');
-
-  // If the container exists on the current page, we inject the html inside it.
   if(jumbotronContainer){
     jumbotronContainer.innerHTML = jumbotronHTML;
   }
 
+  // 4. Inject the Chart Cards
+  const chartCardContainer = document.querySelector('.chart-cards')
+  if(chartCardContainer){
+    chartCardContainer.innerHTML = chartCardsHTML;
+  }
 
+  // 5. Inject the Carousel Dashboard
+  const containerOfCarousel = document.querySelector('.carousel-dashboard');
+  if(containerOfCarousel){
+    containerOfCarousel.innerHTML = carouselDashboardHTML;
+  }
+
+  // 6. Carousel Logic - DOM Elements & State
+  const track = document.getElementById('carousel-track');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+  const dots = document.querySelectorAll('#carousel-dots button');
+
+  // Select the parent container for the pause/resume hover events
+  const carouselContainer = track.parentElement;
+
+  // Initialize carousel state
+  let currentIndex = 0;
+  const totalSlides = track.children.length;
+
+  // Update the Carousel UI (track position and active dot highlight)
+  const updateCarousel = () => {
+    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+    dots.forEach((dot, index) => {
+      if (index === currentIndex){
+        dot.className = "w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee] transition-all";
+      } else {
+        dot.className = "w-3 h-3 rounded-full bg-gray-500/50 transition-all";
+      }
+    });
+  };
+
+  // Move to the next slide logically
+  const nextSlide = () => {
+    currentIndex = (currentIndex + 1) % totalSlides;
+    updateCarousel();
+  };
+
+  // Move to the previous slide logically
+  const prevSlide = () => {
+    currentIndex = (currentIndex - 1 + totalSlides ) % totalSlides;
+    updateCarousel();
+  };
+
+  // Attach Event Listeners for navigation buttons
+  if(btnNext) btnNext.addEventListener('click', nextSlide);
+  if(btnPrev) btnPrev.addEventListener('click', prevSlide);
+
+  // Attach Event Listeners for direct dot navigation
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      currentIndex = index;
+      updateCarousel();
+    });
+  });
+
+  // Auto-Play feature: changes slide automatically every 3 seconds
+  let autoPlayInterval = setInterval(nextSlide, 3000);
+
+  // Pause auto-play when hovering over the carousel, resume when leaving
+  if(carouselContainer){
+    carouselContainer.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+    carouselContainer.addEventListener('mouseleave', () => {
+      autoPlayInterval = setInterval(nextSlide, 3000);
+    });
+  }
 });
