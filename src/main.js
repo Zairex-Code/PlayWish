@@ -42,25 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     containerOfCarousel.innerHTML = carouselDashboardHTML;
   }
   
-  // 6. Inject the Trending Carousel
-  const trendingContainer = document.querySelector('.trending-carousel');
-  if(trendingContainer){
-    trendingContainer.innerHTML = trendingCarouselHTML;
-    
-    // Basic Trending Carousel logic to scroll horizontally
-    const trendTrack = document.getElementById('trend-track');
-    const btnTrendPrev = document.getElementById('trend-prev');
-    const btnTrendNext = document.getElementById('trend-next');
-    
-    if(trendTrack && btnTrendPrev && btnTrendNext) {
-      btnTrendNext.addEventListener('click', () => {
-        trendTrack.scrollBy({ left: 300, behavior: 'smooth' });
-      });
-      btnTrendPrev.addEventListener('click', () => {
-        trendTrack.scrollBy({ left: -300, behavior: 'smooth' });
-      });
-    }
-  }
+ 
 
   // Helper function to setup horizontal scrolling carousels
   const setupHorizontalCarousel = (containerClass, htmlContent, trackId, prevBtnId, nextBtnId) => {
@@ -83,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Inject additional carousels
+  setupHorizontalCarousel('.trending-carousel', trendingCarouselHTML, 'trending-track', 'trending-prev', 'trending-next' );
   setupHorizontalCarousel('.new-releases-carousel', newReleasesHTML, 'new-releases-track', 'new-releases-prev', 'new-releases-next');
   setupHorizontalCarousel('.top-rated-carousel', topRatedHTML, 'top-rated-track', 'top-rated-prev', 'top-rated-next');
   setupHorizontalCarousel('.coming-soon-carousel', comingSoonHTML, 'coming-soon-track', 'coming-soon-prev', 'coming-soon-next');
