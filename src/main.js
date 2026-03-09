@@ -4,6 +4,7 @@ import backgroundDashboardHTML from './layouts/dashboard/background-dashboard.ht
 import jumbotronHTML from './layouts/dashboard/jumbotron-dashboard.html?raw';
 import chartCardsHTML from './layouts/dashboard/chart-cards.html?raw';
 import carouselDashboardHTML from './layouts/dashboard/carousel-dashboard.html?raw';
+import genreDashboardHTML from './layouts/dashboard/Genre-dashboard.html?raw';
 
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Inject the Navbar
@@ -95,4 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
       autoPlayInterval = setInterval(nextSlide, 3000);
     });
   }
+  // 7. Inject the Browse by Genre
+  const genreContainer = document.querySelector('.genre-dashboard');
+  if(genreContainer){
+    genreContainer.innerHTML = genreDashboardHTML;
+  }
+
 });
