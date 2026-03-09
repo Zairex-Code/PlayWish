@@ -82,7 +82,45 @@ The Dashboard is always shown (whether the user is logged in or not).
 
 ---
 
-## ⚔️ Role Assignment (The PlayWish Triumvirate)
+## 🧩 Modular Workflow (How to inject HTML components with JS)
+
+Since we are using Vanilla JS, we simulate a component-based architecture (like React) to avoid repeating the same HTML (like the Navbar or Footer) on every page. We achieve this thanks to a superpower provided by **Vite**.
+
+### 🪄 The Vite `?raw` Magic
+Usually, you would need to make asynchronous `fetch()` requests to load HTML files, which is verbose and slower. However, Vite allows us to import any HTML file directly as a raw text string by simply adding the `?raw` suffix to the import path.
+
+### 🔄 The Injection Pattern
+
+1. **Design your HTML component:**
+   Create an HTML file with your layout inside the `src/layouts/` or `src/components/` folder (e.g., `src/layouts/navbar.html`).
+
+2. **Prepare the container in your main HTML:**
+   In your `index.html` (or any other page), place an empty `<div>` with a descriptive class or ID where the component will live:
+   ```html
+   <!-- index.html -->
+   <div class="navbar-content"></div>
+   ```
+
+3. **Import and inject using JavaScript:**
+   In your JS file (e.g., `src/main.js`), you import the HTML as a string and inject it using `.innerHTML`.
+   ```javascript
+   // 1. Import the HTML file as raw text
+   import navbarHTML from './layouts/navbar.html?raw'; 
+
+   // 2. Wait for the DOM to be fully loaded
+   document.addEventListener('DOMContentLoaded', () => {
+     
+     // 3. Select the empty container you created
+     const navbarContainer = document.querySelector('.navbar-content');
+
+     // 4. Inject the imported HTML inside the container
+     if (navbarContainer) {
+       navbarContainer.innerHTML = navbarHTML;
+     }
+
+   });
+   ```
+By following this workflow, the whole team can work on separate UI pieces and inject them dynamically!
 
 To avoid stepping on each other's code, our team is strategically divided into three layers:
 

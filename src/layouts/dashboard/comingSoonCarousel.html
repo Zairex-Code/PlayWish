@@ -1,0 +1,143 @@
+<div class="w-full mx-auto py-8">
+    
+    <div class="flex items-end justify-between  p-5 px-2">
+        <div class="flex gap-3 items-center">
+            <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <div>
+                <h2 class="text-2xl font-extrabold text-white leading-tight">Coming Soon</h2>
+                <p class="text-sm text-gray-400 font-medium">Highly anticipated games</p>
+            </div>
+        </div>
+        
+        <div class="flex gap-2">
+            <button id="coming-soon-prev" class="w-8 h-8 flex items-center justify-center rounded-full bg-transparent hover:bg-gray-800 text-gray-400 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            <button id="coming-soon-next" class="w-8 h-8 flex items-center justify-center rounded-full bg-transparent hover:bg-gray-800 text-gray-400 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+        </div>
+    </div>
+    
+    <div id="coming-soon-track" class="flex overflow-x-auto snap-x snap-mandatory gap-4 py-6 px-2 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        
+        <div class="snap-start shrink-0 w-[280px] bg-[#1a1d24] rounded-2xl overflow-hidden flex flex-col group hover:ring-2 hover:ring-cyan-500 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:-translate-y-2 hover:scale-105 duration-300 transition-all cursor-pointer">
+            <div class="relative h-44 w-full overflow-hidden">
+                <img src="/src/images/juego1.jpg" alt="Game" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#1a1d24] via-transparent to-transparent"></div>
+                
+                <div class="absolute top-3 right-3 bg-green-500 text-black text-xs font-bold px-2 py-1 rounded-lg">82</div>
+                
+                <div class="absolute bottom-3 left-3 flex gap-2">
+                    <span class="bg-black/60 text-gray-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Action</span>
+                </div>
+            </div>
+            
+            <div class="p-4 flex flex-col gap-3">
+                <h3 class="text-white font-bold text-lg truncate group-hover:text-cyan-400 transition-colors">Black Myth: Wukong</h3>
+                
+                <div class="flex justify-between items-center text-gray-400 text-sm font-medium">
+                    <div class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="snap-start shrink-0 w-[280px] bg-[#1a1d24] rounded-2xl overflow-hidden flex flex-col group hover:ring-2 hover:ring-cyan-500 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:-translate-y-2 hover:scale-105 duration-300 transition-all cursor-pointer">
+            <div class="relative h-44 w-full overflow-hidden">
+                <img src="/src/images/juego2.jpg" alt="Game" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#1a1d24] via-transparent to-transparent"></div>
+                
+                <div class="absolute top-3 right-3 bg-green-500 text-black text-xs font-bold px-2 py-1 rounded-lg">78</div>
+                
+                <div class="absolute bottom-3 left-3 flex gap-2">
+                    <span class="bg-black/60 text-gray-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Action</span>
+                </div>
+            </div>
+            
+            <div class="p-4 flex flex-col gap-3">
+                <h3 class="text-white font-bold text-lg truncate group-hover:text-cyan-400 transition-colors">Palworld</h3>
+                <div class="flex justify-between items-center text-gray-400 text-sm font-medium">
+                    <div class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="snap-start shrink-0 w-[280px] bg-[#1a1d24] rounded-2xl overflow-hidden flex flex-col group hover:ring-2 hover:ring-cyan-500 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:-translate-y-2 hover:scale-105 duration-300 transition-all cursor-pointer">
+            <div class="relative h-44 w-full overflow-hidden">
+                <img src="/src/images/juego3.jpg" alt="Game" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#1a1d24] via-transparent to-transparent"></div>
+                
+                <div class="absolute top-3 right-3 bg-green-500 text-black text-xs font-bold px-2 py-1 rounded-lg">82</div>
+                
+                <div class="absolute bottom-3 left-3 flex gap-2">
+                    <span class="bg-black/60 text-gray-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Shooter</span>
+                </div>
+            </div>
+            
+            <div class="p-4 flex flex-col gap-3">
+                <h3 class="text-white font-bold text-lg truncate group-hover:text-cyan-400 transition-colors">Helldivers 2</h3>
+                <div class="flex justify-between items-center text-gray-400 text-sm font-medium">
+                    <div class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="snap-start shrink-0 w-[280px] bg-[#1a1d24] rounded-2xl overflow-hidden flex flex-col group hover:ring-2 hover:ring-cyan-500 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:-translate-y-2 hover:scale-105 duration-300 transition-all cursor-pointer">
+            <div class="relative h-44 w-full overflow-hidden">
+                <img src="/src/images/juego4.jpg" alt="Game" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#1a1d24] via-transparent to-transparent"></div>
+                
+                <div class="absolute top-3 right-3 bg-green-500 text-black text-xs font-bold px-2 py-1 rounded-lg">92</div>
+                
+                <div class="absolute bottom-3 left-3 flex gap-2">
+                    <span class="bg-black/60 text-gray-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">RPG</span>
+                </div>
+            </div>
+            
+            <div class="p-4 flex flex-col gap-3">
+                <h3 class="text-white font-bold text-lg truncate group-hover:text-cyan-400 transition-colors">Final Fantasy VII Rebirth</h3>
+                <div class="flex justify-between items-center text-gray-400 text-sm font-medium">
+                    <div class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="snap-start shrink-0 w-[280px] bg-[#1a1d24] rounded-2xl overflow-hidden flex flex-col group hover:ring-2 hover:ring-cyan-500 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:-translate-y-2 hover:scale-105 duration-300 transition-all cursor-pointer">
+            <div class="relative h-44 w-full overflow-hidden">
+                <img src="/src/images/juego5.jpg" alt="Game" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#1a1d24] via-transparent to-transparent"></div>
+                
+                <div class="absolute top-3 right-3 bg-green-500 text-black text-xs font-bold px-2 py-1 rounded-lg">92</div>
+                
+                <div class="absolute bottom-3 left-3 flex gap-2">
+                    <span class="bg-black/60 text-gray-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Sandbox</span>
+                </div>
+            </div>
+            
+            <div class="p-4 flex flex-col gap-3">
+                <h3 class="text-white font-bold text-lg truncate group-hover:text-cyan-400 transition-colors">Minecraft</h3>
+                <div class="flex justify-between items-center text-gray-400 text-sm font-medium">
+                    <div class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

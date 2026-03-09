@@ -1,0 +1,109 @@
+<nav class="bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-800 shadow-lg">
+  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+    
+    <!-- Logo -->
+    <a href="index.html" class="flex items-center space-x-3 rtl:space-x-reverse">
+        <span class="self-center text-2xl font-extrabold text-white whitespace-nowrap tracking-tight">
+            Play<span class="text-cyan-400">Wish</span>
+        </span>
+    </a>
+
+    <!-- Right Side Actions -->
+    <div class="flex items-center md:order-2 space-x-3 md:space-x-4 rtl:space-x-reverse">
+        
+        <!-- Custom Dropdown Component (Replaced the <select>) -->
+        <div class="relative hidden md:block">
+          <button id="dropdownDividerButton" data-dropdown-toggle="dropdownDivider" class="inline-flex items-center justify-center text-white bg-gray-800 border border-gray-700 hover:bg-gray-700 focus:ring-4 focus:ring-cyan-500 shadow-xs font-medium leading-5 rounded-lg text-sm px-4 py-2.5 focus:outline-none transition-all" type="button">
+            Search Type 
+            <svg class="w-4 h-4 ms-1.5 -me-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
+          </button>
+
+          <!-- Dropdown menu -->
+          <div id="dropdownDivider" class="absolute top-full right-0 mt-2 z-10 hidden bg-gray-800 border border-gray-700 rounded-lg divide-y divide-gray-700 shadow-lg w-44">
+              <ul class="p-2 text-sm text-gray-300 font-medium" aria-labelledby="dropdownDividerButton">
+                <li>
+                  <a href="#" class="inline-flex items-center w-full p-2 hover:bg-gray-700 hover:text-white rounded transition-colors">By Name</a>
+                </li>
+                <li>
+                  <a href="#" class="inline-flex items-center w-full p-2 hover:bg-gray-700 hover:text-white rounded transition-colors">By Genre</a>
+                </li>
+                <li>
+                  <a href="#" class="inline-flex items-center w-full p-2 hover:bg-gray-700 hover:text-white rounded transition-colors">By Studio</a>
+                </li>
+              </ul>
+              <div class="p-2 text-sm text-gray-300 font-medium">
+                <a href="#" class="inline-flex items-center w-full p-2 hover:bg-gray-700 hover:text-white rounded transition-colors">Advanced Search</a>
+              </div>
+          </div>
+        </div>
+
+        <!-- Search Input Desktop -->
+        <div class="relative hidden md:block w-64">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+          </div>
+          <input type="text" id="search-input" class="block w-full p-2.5 ps-10 text-sm text-white bg-gray-800 border border-gray-700 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 placeholder-gray-400 transition-all" placeholder="Search game...">
+        </div>
+
+        <!-- Wishlist Button -->
+        <button id="nav-wishlist-btn" class="hidden md:flex text-gray-300 hover:text-cyan-500 font-medium rounded-lg text-sm px-3 py-2 text-center items-center transition-colors">
+            <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path></svg>
+            Wishlist
+        </button>
+
+        <!-- Login Button -->
+        <button id="login-btn" type="button" class="text-blue-950 bg-cyan-400 hover:bg-cyan-500 focus:ring-4 focus:outline-none focus:ring-cyan-800 font-bold rounded-lg text-sm px-4 py-2.5 text-center transition-colors">
+            Login
+        </button>
+
+        <!-- User Profile Avatar (Hidden by default) -->
+        <div id="user-profile" class="hidden relative">
+            <button type="button" class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-600" id="user-menu-button">
+                <span class="sr-only">Open user menu</span>
+                <img class="w-8 h-8 rounded-full border-2 border-cyan-400" src="https://ui-avatars.com/api/?name=User&background=1f2937&color=22d3ee" alt="User photo">
+            </button>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-400 rounded-lg md:hidden hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600" aria-controls="navbar-user" aria-expanded="false">
+          <span class="sr-only">Open menu</span>
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+          </svg>
+        </button>
+    </div>
+
+    <!-- Center/Left Menu Links (Desktop) & Collapsible Menu (Mobile) -->
+    <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+      <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-700 rounded-lg bg-gray-800 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-gray-900">
+        <li>
+            <a href="#" class="block py-2 px-3 text-white rounded hover:bg-gray-700 md:hover:bg-transparent md:hover:text-cyan-400 md:p-0 transition-colors">Recommendations</a>
+        </li>
+        <li>
+            <a href="#" class="block py-2 px-3 text-white rounded hover:bg-gray-700 md:hover:bg-transparent md:hover:text-cyan-400 md:p-0 transition-colors">Categories</a>
+        </li>
+        
+        <!-- Mobile Extra Options -->
+        <li class="md:hidden mt-4">
+            <select id="search-type-mobile" class="block w-full bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 p-2.5 mb-2">
+                <option value="name">By Name</option>
+                <option value="genre">By Genre</option>
+            </select>
+            <div class="relative">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                  <svg class="w-4 h-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                  </svg>
+                </div>
+                <input type="text" id="search-input-mobile" class="block w-full p-2.5 ps-10 text-sm text-white bg-gray-700 border border-gray-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 placeholder-gray-400" placeholder="Search game...">
+            </div>
+        </li>
+        <li class="md:hidden mt-2 border-t border-gray-700 pt-2">
+            <a href="#" class="block py-2 px-3 text-gray-300 rounded hover:bg-gray-700 hover:text-pink-500 transition-colors">❤️ View my Wishlist</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
