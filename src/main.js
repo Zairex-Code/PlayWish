@@ -19,7 +19,7 @@ import popularAllTimesHTML from './layouts/dashboard/popularAllTimesCarousel.htm
 import genreDashboardHTML from './layouts/dashboard/Genre-dashboard.html?raw';
 
 // ==========================================
-// 🏭 GAME CARD TEMPLATE (The Factory)
+//  GAME CARD TEMPLATE (The Factory)
 // ==========================================
 const createGameCardHTML = (game) => {
     // 1. Data cleaning (Quality Control)
@@ -73,6 +73,40 @@ const createGameCardHTML = (game) => {
         </div>`;
 };
 
+// ==========================================
+// DASHBOARD CAROUSEL CARD TEMPLATE (The Factory)
+// ==========================================
+const createDashboardCarouselHTML = (game) => {
+    // 1. Data cleaning (Quality Control)
+    // RAWG sometimes omits Metacritic, so we provide a fallback 'N/A'
+    const score = game.metacritic ? game.metacritic : 'N/A'; 
+    
+    // Extract the year from the release date (e.g., "2024-02-15" -> "2024")
+    const year = game.released ? game.released.split('-')[0] : 'TBA';
+
+    // 2. Extract first and second genres if they exist
+    const genre1 = game.genres && game.genres[0] ? game.genres[0].name : 'Game';
+    const genre2 = game.genres && game.genres[1] ? game.genres[1].name : '';
+
+    const genreBadge1 = genre1 ? `<span class="bg-black/60 text-gray-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">${genre1}</span>` : '';
+    const genreBadge2 = genre2 ? `<span class="bg-black/60 text-gray-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">${genre2}</span>` : '';
+
+
+
+    // 3. HTML Template (Injecting data with ${})
+    return `
+        <div class="w-full shrink-0 relative group/slide cursor-pointer">
+                <img src="${game.background_image}" class="absolute inset-0 w-full h-full object-cover group-hover/slide:scale-105 transition-transform duration-1000 ease-out" alt="Cyberpunk 2077">
+                <div class="absolute inset-0 bg-linear-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-8 md:p-12 w-full transform translate-y-4 group-hover/slide:translate-y-0 transition-transform duration-500">
+                    <span class="inline-block px-3 py-1 bg-cyan-500/20 border border-cyan-500/30 rounded-full text-xs font-bold text-cyan-400 tracking-widest uppercase mb-3 backdrop-blur-sm">${genreBadge1}${genreBadge2}</span>
+                    <h3 class="text-4xl md:text-5xl font-extrabold text-white mb-3 drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]">${game.name}</h3>
+                    <p class="text-gray-300 max-w-2xl text-sm md:text-base opacity-0 group-hover/slide:opacity-100 transition-opacity duration-500 delay-100">${game.reviews_text_count}</p>
+                </div>
+            </div>
+            `;
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Inject the Navbar
   const navbarContainer = document.querySelector('.navbar-content');
@@ -98,37 +132,142 @@ document.addEventListener('DOMContentLoaded', () => {
     chartCardContainer.innerHTML = chartCardsHTML;
   }
 
-  // 5. Inject the Carousel Dashboard
-  const containerOfCarousel = document.querySelector('.carousel-dashboard');
-  if(containerOfCarousel){
-    containerOfCarousel.innerHTML = carouselDashboardHTML;
-  }
-  
- 
+  // 5. Main Dashboard Carousel Engine (Hero Jumbotron)
+  // Re-structured to fetch data and only activate the arrows logic after finding it
+  const setupDashboardCarousel = async (containerClass, carouselDashboardHTML, fetchFunction) => {
+    const containerOfCarousel = document.querySelector(containerClass);
+    if(containerOfCarousel) {
+      // 5.1. Inject the static structure into the main container
+      containerOfCarousel.innerHTML = carouselDashboardHTML;
 
-  // Helper function to setup horizontal scrolling carousels
+      const track = document.getElementById('carousel-track');
+      
+      // 5.2. Verify that we have the container (track) and the function to request the games.
+      if(track && fetchFunction){
+        // Show a temporary text while fetching the rawg Json
+        track.innerHTML = '<div class="flex items-center justify-center p-8 w-full"><p class="text-cyan-400 font-bold animate-pulse text-xl">Loading Hero Games...</p></div>';
+        try{
+          // 5.3. Wait to receive the games from DB 
+          let games = await fetchFunction();
+          
+          if (games && games.length > 0){
+            // 5.4 Limit the maximum amount in the Main Hero to 5 games for better performance
+            games = games.slice(0, 5);
+            
+            // 5.5 Build the cards using the factory(template strings) and insert them to the track
+            const dashboardCarouselHTML = games.map(game => createDashboardCarouselHTML(game)).join('');
+            track.innerHTML = dashboardCarouselHTML;
+
+            // 5.6 NOW THAT THEY EXIST: Link the buttons and indexes passing the correct IDs.
+            initMainCarouselLogic('carousel-track', 'btn-prev', 'btn-next', 'carousel-dots');
+
+          } else {
+            track.innerHTML = '<p class="text-gray-500 p-4">No games found for this section.</p>';
+          }
+        }catch(error) {
+          track.innerHTML = '<p class="text-red-500 p-4">Failed to load games. Please try again later.</p>';
+        }
+      }
+    } 
+  };
+
+  // 6. Internal Movement Logic (Controllers) for the Main Carousel
+  const initMainCarouselLogic = (trackId, prevBtnId, nextBtnId, dotsContainerId) => {
+    
+    // 6.1 Identify DOM Components
+    const track = document.getElementById(trackId);
+    const btnPrev = document.getElementById(prevBtnId);
+    const btnNext = document.getElementById(nextBtnId);
+    const dotsContainer = document.getElementById(dotsContainerId);
+
+    // Exit if there is no one (security)
+    if (!track || !btnPrev || !btnNext || !dotsContainer) return;
+
+    // 6.2 Define Carousel State Variables
+    const totalSlides = track.children.length;
+    if (totalSlides === 0) return;
+    let currentIndex = 0;
+
+    // 6.3 Dynamic creation of the Points (dots) using the amount of slides/games.
+    // This prevents having three fixed points in HTML with five api images.
+    dotsContainer.innerHTML = Array.from({length: totalSlides}).map((_, i) => 
+      `<button class="w-3 h-3 rounded-full transition-all cursor-pointer ${i === 0 ? 'bg-cyan-400 shadow-[0_0_10px_#22d3ee]' : 'bg-gray-500/50 hover:bg-gray-400'}"></button>`
+    ).join('');
+    
+    const dots = dotsContainer.querySelectorAll('button');
+
+    // 6.4 Main Method: Moves the Div by Horizontal Transition and repaints the 'dots'
+    const updateCarousel = () => {
+      track.style.transform = `translateX(-${currentIndex * 100}%)`;
+      // We actively paint the selected dot Cyan with shadow.
+      dots.forEach((dot, index) => {
+        if (index === currentIndex){
+          dot.className = "w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee] transition-all cursor-pointer";
+        } else {
+          dot.className = "w-3 h-3 rounded-full bg-gray-500/50 hover:bg-gray-400 transition-all cursor-pointer";
+        }
+      });
+    };
+
+    // 6.5 Advance to the right
+    const nextSlide = () => {
+      currentIndex = (currentIndex + 1) % totalSlides;
+      updateCarousel();
+    };
+
+    // 6.6 Go back to the left
+    const prevSlide = () => {
+      currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+      updateCarousel();
+    };
+
+    // 6.7 Attach Click events for Arrows
+    btnNext.addEventListener('click', nextSlide);
+    btnPrev.addEventListener('click', prevSlide);
+
+    // 6.8 Attach Click events for Dots to go to a direct slide.
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        currentIndex = index;
+        updateCarousel();
+      });
+    });
+
+    // 6.9 Setup Auto-Play Interval every 5000ms
+    let autoPlayInterval = setInterval(nextSlide, 5000);
+    const carouselContainer = track.parentElement; // The relative container
+
+    // Freeze autoplay when mouse hovers over looking to click.
+    if(carouselContainer){
+      carouselContainer.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+      carouselContainer.addEventListener('mouseleave', () => {
+        clearInterval(autoPlayInterval);
+        autoPlayInterval = setInterval(nextSlide, 5000);
+      });
+    }
+  };
+
+  // 7. Engine For Bottom Horizontal Carousels (Trending, Top Rated)
+  // These work with simple horizontal scrolling scrollby()
   const setupHorizontalCarousel = async (containerClass, htmlContent, trackId, prevBtnId, nextBtnId, fetchFunction) => {
     const container = document.querySelector(containerClass);
     if(container) {
-      // 1.  We inject the visual skeleton 
+      // 7.1. Inject initial structure
       container.innerHTML = htmlContent;
 
       const track = document.getElementById(trackId);
       const prevBtn = document.getElementById(prevBtnId);
       const nextBtn = document.getElementById(nextBtnId);
       
-      // 2. Fetch and inject real data if a fetch function was provided
+      // 7.2. Bring the info through the associated api function
       if(track && fetchFunction){
-        // Show a temporary loading message
         track.innerHTML = '<p class="text-gray-400 p-4 font-medium animate-pulse">Loading games from RAWG...</p>';
         try{
-          // Call the cef Dispatcher and wait for the games
           const games = await fetchFunction();
           if (games && games.length>0){
-            // Pass games through the factory template and merge them into a single HTML string
+            // We use join('') to fuse all in a string and inject
             const cardsHTML = games.map(game => createGameCardHTML(game)).join('');
-            track.innerHTML = cardsHTML; //Put the finished cards on the shelf
-
+            track.innerHTML = cardsHTML;
           }else{
             track.innerHTML = '<p class="text-gray-500 p-4">No games found for this section.</p>';
           }
@@ -137,6 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
+      // 7.3. Scroll functionality so it reacts to the click
       if(track && prevBtn && nextBtn) {
         nextBtn.addEventListener('click', () => {
           track.scrollBy({ left: 300, behavior: 'smooth' });
@@ -148,79 +288,22 @@ document.addEventListener('DOMContentLoaded', () => {
     } 
   };
 
-  // Inject additional carousels
+  // 8. Initialization of All Application Carousels
+  
+  // 8.1 Setup Main Hero Carousel (Calling functions 5 and 6 internally)
+  setupDashboardCarousel('.carousel-dashboard', carouselDashboardHTML, getTrendingGames);
+
+  // 8.2 Setup of Minor Carousels (Calling function 7 multiple times)
   setupHorizontalCarousel('.trending-carousel', trendingCarouselHTML, 'trending-track', 'trending-prev', 'trending-next', getTrendingGames);
   setupHorizontalCarousel('.new-releases-carousel', newReleasesHTML, 'new-releases-track', 'new-releases-prev', 'new-releases-next', getNewReleases);
   setupHorizontalCarousel('.top-rated-carousel', topRatedHTML, 'top-rated-track', 'top-rated-prev', 'top-rated-next', getTopRated);
   setupHorizontalCarousel('.coming-soon-carousel', comingSoonHTML, 'coming-soon-track', 'coming-soon-prev', 'coming-soon-next', getComingSoon);
   setupHorizontalCarousel('.popular-all-times-carousel', popularAllTimesHTML, 'popular-track', 'popular-prev', 'popular-next', getPopularAllTimes);
-
-  // 7. Inject the Browse by Genre
+  
+  // 9. Inject the Browse by Genre
   const genreContainer = document.querySelector('.genre-dashboard');
   if(genreContainer){
     genreContainer.innerHTML = genreDashboardHTML;
-  }
-
-  // 8. Main Carousel Logic - DOM Elements & State
-  const track = document.getElementById('carousel-track');
-  if (track) {
-    const btnPrev = document.getElementById('btn-prev');
-    const btnNext = document.getElementById('btn-next');
-    const dots = document.querySelectorAll('#carousel-dots button');
-
-    // Select the parent container for the pause/resume hover events
-    const carouselContainer = track.parentElement;
-
-    // Initialize carousel state
-    let currentIndex = 0;
-    const totalSlides = track.children.length;
-
-    // Update the Carousel UI (track position and active dot highlight)
-    const updateCarousel = () => {
-      track.style.transform = `translateX(-${currentIndex * 100}%)`;
-      dots.forEach((dot, index) => {
-        if (index === currentIndex){
-          dot.className = "w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee] transition-all";
-        } else {
-          dot.className = "w-3 h-3 rounded-full bg-gray-500/50 transition-all";
-        }
-      });
-    };
-
-    // Move to the next slide logically
-    const nextSlide = () => {
-      currentIndex = (currentIndex + 1) % totalSlides;
-      updateCarousel();
-    };
-
-    // Move to the previous slide logically
-    const prevSlide = () => {
-      currentIndex = (currentIndex - 1 + totalSlides ) % totalSlides;
-      updateCarousel();
-    };
-
-    // Attach Event Listeners for navigation buttons
-    if(btnNext) btnNext.addEventListener('click', nextSlide);
-    if(btnPrev) btnPrev.addEventListener('click', prevSlide);
-
-    // Attach Event Listeners for direct dot navigation
-    dots.forEach((dot, index) => {
-      dot.addEventListener('click', () => {
-        currentIndex = index;
-        updateCarousel();
-      });
-    });
-
-    // Auto-Play feature: changes slide automatically every 3 seconds
-    let autoPlayInterval = setInterval(nextSlide, 3000);
-
-    // Pause auto-play when hovering over the carousel, resume when leaving
-    if(carouselContainer){
-      carouselContainer.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
-      carouselContainer.addEventListener('mouseleave', () => {
-        autoPlayInterval = setInterval(nextSlide, 3000);
-      });
-    }
   }
 
 });
