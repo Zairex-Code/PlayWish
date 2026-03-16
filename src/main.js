@@ -88,8 +88,8 @@ const createDashboardCarouselHTML = (game) => {
     const genre1 = game.genres && game.genres[0] ? game.genres[0].name : 'Game';
     const genre2 = game.genres && game.genres[1] ? game.genres[1].name : '';
 
-    const genreBadge1 = genre1 ? `<span class="bg-black/60 text-gray-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">${genre1}</span>` : '';
-    const genreBadge2 = genre2 ? `<span class="bg-black/60 text-gray-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">${genre2}</span>` : '';
+    const genreBadge1 = genre1 ? `<span class="  bg-cyan-400/50 text-gray-300 text-[10px] font-bold px-2.5  mr-4 py-1 rounded-full uppercase">${genre1}</span>` : '';
+    const genreBadge2 = genre2 ? `<span class=" bg-cyan-400/50  text-gray-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">${genre2}</span>` : '';
 
 
 
@@ -99,9 +99,9 @@ const createDashboardCarouselHTML = (game) => {
                 <img src="${game.background_image}" class="absolute inset-0 w-full h-full object-cover group-hover/slide:scale-105 transition-transform duration-1000 ease-out" alt="Cyberpunk 2077">
                 <div class="absolute inset-0 bg-linear-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 p-8 md:p-12 w-full transform translate-y-4 group-hover/slide:translate-y-0 transition-transform duration-500">
-                    <span class="inline-block px-3 py-1 bg-cyan-500/20 border border-cyan-500/30 rounded-full text-xs font-bold text-cyan-400 tracking-widest uppercase mb-3 backdrop-blur-sm">${genreBadge1}${genreBadge2}</span>
+                    <span class="inline-block px-0 py-1 rounded-full text-xs font-bold gap-4 uppercase mb-3 backdrop-blur-sm">${genreBadge1}${genreBadge2}</span>
                     <h3 class="text-4xl md:text-5xl font-extrabold text-white mb-3 drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]">${game.name}</h3>
-                    <p class="text-gray-300 max-w-2xl text-sm md:text-base opacity-0 group-hover/slide:opacity-100 transition-opacity duration-500 delay-100">${game.reviews_text_count}</p>
+                    <p class="text-gray-300 max-w-2xl text-sm md:text-base opacity-0 group-hover/slide:opacity-100 transition-opacity duration-500 delay-100">${game.description}</p>
                 </div>
             </div>
             `;
@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 8. Initialization of All Application Carousels
   
   // 8.1 Setup Main Hero Carousel (Calling functions 5 and 6 internally)
-  setupDashboardCarousel('.carousel-dashboard', carouselDashboardHTML, getTrendingGames);
+  setupDashboardCarousel('.carousel-dashboard', carouselDashboardHTML, getPopularAllTimes);
 
   // 8.2 Setup of Minor Carousels (Calling function 7 multiple times)
   setupHorizontalCarousel('.trending-carousel', trendingCarouselHTML, 'trending-track', 'trending-prev', 'trending-next', getTrendingGames);
