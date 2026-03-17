@@ -4,7 +4,8 @@ import {
   getNewReleases, 
   getTopRated, 
   getComingSoon, 
-  getPopularAllTimes 
+  getPopularAllTimes,
+  getGameDetails, 
 } from './api.js';
 import navbarHTML from './layouts/dashboard/navbar.html?raw';
 import backgroundDashboardHTML from './layouts/dashboard/background-dashboard.html?raw';
@@ -17,6 +18,7 @@ import topRatedHTML from './layouts/dashboard/topRatedCarousel.html?raw';
 import comingSoonHTML from './layouts/dashboard/comingSoonCarousel.html?raw';
 import popularAllTimesHTML from './layouts/dashboard/popularAllTimesCarousel.html?raw';
 import genreDashboardHTML from './layouts/dashboard/Genre-dashboard.html?raw';
+import modalDashboardHTML from './layouts/dashboard/modal.html?raw';
 
 // ==========================================
 //  GAME CARD TEMPLATE (The Factory)
@@ -40,7 +42,7 @@ const createGameCardHTML = (game) => {
 
     // 3. HTML Template (Injecting data with ${})
     return `
-        <div class="snap-start shrink-0 w-70 bg-[#1a1d24] rounded-2xl overflow-hidden flex flex-col group hover:ring-2 hover:ring-cyan-500 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:-translate-y-2 hover:scale-105 duration-300 transition-all cursor-pointer">
+        <div class="snap-start shrink-0 w-70 bg-[#1a1d24] rounded-2xl overflow-hidden flex flex-col group hover:ring-2 hover:ring-cyan-500 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:-translate-y-2 hover:scale-105 duration-300 transition-all cursor-pointer" onclick="openGameModal(${game.id})" >
             <div class="relative h-44 w-full overflow-hidden">
                 <img src="${game.background_image}" alt="${game.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out">
                 <div class="absolute inset-0 bg-linear-to-t from-[#1a1d24] via-transparent to-transparent"></div>
@@ -305,5 +307,128 @@ document.addEventListener('DOMContentLoaded', () => {
   if(genreContainer){
     genreContainer.innerHTML = genreDashboardHTML;
   }
+
+
+  //10. inject the universal modal
+  const body = document.querySelector('body');
+  if(body){
+    body.insertAdjacentHTML('beforeend',modalDashboardHTML);
+  }
+
+  //11. modal logic
+  const initModalLogic = () => {
+    const backdrop = document.getElementById('game-modal-backdrop');
+    const modalBox = document.getElementById('game-modal-box');
+    const closeBtn = document.getElementById('close-modal-btn');
+    if(!backdrop || !modalBox || !closeBtn) return;
+
+    //function to open the modal
+    window.openGameModal = async (gameId) => {
+
+      // Remove 'hidden' so it exists in the layout, but keep opacity at 0
+      backdrop.classList.remove('hidden');
+      backdrop.classList.add('flex');
+
+      //Small delay to allow CSS transitions to trigger (Fade in & Scale up)
+      setTimeout(()=>{
+        backdrop.classList.remove('opacity-0');
+        backdrop.classList.add('opacity-100');
+        modalBox.classList.remove('scale-95');
+        modalBox.classList.add('scale-100');
+      },10);
+
+      // Target the content area and show a loading state
+      const modalContent = document.getElementById('game-modal-content');
+      modalContent.innerHTML = `
+            <div class="h-64 flex items-center justify-center">
+                <p class="text-cyan-400 font-bold animate-pulse">Loading classified data...</p>
+            </div>
+        `;
+      try{
+        // fetch exact game details
+        const game = await getGameDetails(gameId);
+        // clean up the date (RAWG sometimes sends HTML tags in description )
+        const description = game.description_raw || "No description available for the moment"
+        const score = game.metacritic ? `<span class="bg-green-500 text-black text-xs font-bold px-2 py-1 rounded-lg">Score: ${game.metacritic}</span>` : '';
+        const devName = game.developers && game.developers.length > 0 ? game.developers[0].name : 'Unknown Developer';
+        const releaseYear = game.released ? game.released.split('-')[0]: 'TBA';
+
+
+        // Inject the rich HTML into the modal
+        modalContent.innerHTML = `<div class="relative h-64 w-full">
+                    <img src="${game.background_image}" alt="${game.name}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#1a1d24] via-[#1a1d24]/60 to-transparent"></div>
+                    <div class="absolute bottom-4 left-6 flex items-center gap-3">
+                        ${score}
+                        <span class="text-gray-300 text-sm font-medium border border-gray-600 px-2 py-0.5 rounded-md">${releaseYear}</span>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <h2 class="text-3xl font-extrabold text-white mb-2">${game.name}</h2>
+                    <p class="text-cyan-400 text-sm font-bold mb-4 uppercase tracking-wider">By ${devName}</p>
+                    
+                    <div class="text-gray-400 text-sm leading-relaxed max-h-40 overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full">
+                        ${description}
+                    </div>
+
+                    <div class="mt-6 flex justify-end">
+                        <button class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-2 px-6 rounded-lg transition-colors shadow-[0_0_15px_rgba(34,211,238,0.4)]">
+                            Add to Wishlist
+                        </button>
+                    </div>
+                </div>
+        `;
+
+      }catch(error){
+            modalContent.innerHTML = `
+                <div class="h-64 flex items-center justify-center flex-col gap-2">
+                    <p class="text-red-500 font-bold">Connection lost: " + error + ".</p>
+                    <p class="text-gray-500 text-sm">Please close and try again.</p>
+                </div>
+            `;
+      }
+    };
+
+    const closeModal = () =>{
+      // Trigger the reverse animation (Fade out & Scale down)
+      backdrop.classList.remove('opacity-100');
+      backdrop.classList.add('opacity-0');
+      modalBox.classList.remove('scale-100');
+      modalBox.classList.add('scale-95');
+
+      // wait for the animation to finish before hiding it completly
+      setTimeout(() => {
+        backdrop.classList.remove('flex');
+        backdrop.classList.add('hidden');
+      },300);
+    }; 
+
+
+    // Listeners to the close modal
+    closeBtn.addEventListener('click', closeModal);
+
+    //close if the user clicks exaactly on the dark background (outside the box)
+    backdrop.addEventListener('click',(e) =>{
+      if (e.target === backdrop) closeModal();
+    });
+
+    // close if the user presses the 'Escape' key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !backdrop.classList.contains('hidden')){
+        closeModal();
+      }
+
+    });
+
+
+
+  };
+  // Start the modal logic
+  initModalLogic();
+
+
+
+
 
 });

@@ -80,3 +80,17 @@ export const searchGames = (query) => {
     return fetchFromAPI('/games', `&search=${query}&page_size=10`);
 };
 
+
+// 8 get Specifictç Game Details (for the modal)
+export const getGameDetails = async (id) => {
+    try {
+        const response = await fetch(`${BASE_URL}/games/${id}?key=${API_KEY}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error(`Error fetching game details for ID ${id}:`, error);
+        throw error;
+    }
+}
