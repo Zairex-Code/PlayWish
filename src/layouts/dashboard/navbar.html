@@ -9,27 +9,21 @@
     </a>
 
     <!-- Right Side Actions -->
-    <div class="flex items-center md:order-2 space-x-3 md:space-x-4 rtl:space-x-reverse">
+    <div class="flex items-center gap-4 md:order-2">
         
         <!-- Custom Dropdown Component (Replaced the <select>) -->
         <div class="relative hidden md:block">
           <button id="dropdownDividerButton" data-dropdown-toggle="dropdownDivider" class="inline-flex items-center justify-center text-white bg-gray-800 border border-gray-700 hover:bg-gray-700 focus:ring-4 focus:ring-cyan-500 shadow-xs font-medium leading-5 rounded-lg text-sm px-4 py-2.5 focus:outline-none transition-all" type="button">
             Search Type 
-            <svg class="w-4 h-4 ms-1.5 -me-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
+            <svg class="w-4 h-4 ms-1.5 -me-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
           </button>
 
           <!-- Dropdown menu -->
           <div id="dropdownDivider" class="absolute top-full right-0 mt-2 z-10 hidden bg-gray-800 border border-gray-700 rounded-lg divide-y divide-gray-700 shadow-lg w-44">
               <ul class="p-2 text-sm text-gray-300 font-medium" aria-labelledby="dropdownDividerButton">
-                <li>
-                  <a href="#" class="inline-flex items-center w-full p-2 hover:bg-gray-700 hover:text-white rounded transition-colors">By Name</a>
-                </li>
-                <li>
-                  <a href="#" class="inline-flex items-center w-full p-2 hover:bg-gray-700 hover:text-white rounded transition-colors">By Genre</a>
-                </li>
-                <li>
-                  <a href="#" class="inline-flex items-center w-full p-2 hover:bg-gray-700 hover:text-white rounded transition-colors">By Studio</a>
-                </li>
+                <li><a href="#" class="inline-flex items-center w-full p-2 hover:bg-gray-700 hover:text-white rounded transition-colors">By Name</a></li>
+                <li><a href="#" class="inline-flex items-center w-full p-2 hover:bg-gray-700 hover:text-white rounded transition-colors">By Genre</a></li>
+                <li><a href="#" class="inline-flex items-center w-full p-2 hover:bg-gray-700 hover:text-white rounded transition-colors">By Studio</a></li>
               </ul>
               <div class="p-2 text-sm text-gray-300 font-medium">
                 <a href="#" class="inline-flex items-center w-full p-2 hover:bg-gray-700 hover:text-white rounded transition-colors">Advanced Search</a>
@@ -54,15 +48,26 @@
         </button>
 
         <!-- Login Button -->
-        <button id="login-btn" type="button" class="text-blue-950 bg-cyan-400 hover:bg-cyan-500 focus:ring-4 focus:outline-none focus:ring-cyan-800 font-bold rounded-lg text-sm px-4 py-2.5 text-center transition-colors">
+        <a href="./src/layouts/auth/login-auth.html" id="nav-login-link" class="text-blue-950 bg-cyan-400 hover:bg-cyan-500 focus:ring-4 focus:outline-none focus:ring-cyan-800 font-bold rounded-lg text-sm px-4 py-2.5 text-center transition-colors">
             Login
-        </button>
+        </a>
 
         <!-- User Profile Avatar (Hidden by default) -->
-        <div id="user-profile" class="hidden relative">
-            <button type="button" class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-600" id="user-menu-button">
+        <div id="nav-user-profile" class="hidden items-center gap-3">
+          <div class="flex-col text-right hidden md:flex">
+                <span class="text-xs text-gray-400">Welcome,</span>
+                <span id="nav-username" class="text-sm font-bold text-cyan-400">Gamer</span>
+            </div>
+            
+            <button type="button" class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-600">
                 <span class="sr-only">Open user menu</span>
                 <img class="w-8 h-8 rounded-full border-2 border-cyan-400" src="https://ui-avatars.com/api/?name=User&background=1f2937&color=22d3ee" alt="User photo">
+            </button>
+
+            <button id="nav-logout-btn" class="text-gray-500 hover:text-red-500 transition-colors ml-1 p-1 rounded hover:bg-gray-800" title="Log out">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
             </button>
         </div>
 
