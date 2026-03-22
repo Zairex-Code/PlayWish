@@ -10,12 +10,51 @@ import topRatedHTML from './layouts/dashboard/topRatedCarousel.html?raw';
 import comingSoonHTML from './layouts/dashboard/comingSoonCarousel.html?raw';
 import popularAllTimesHTML from './layouts/dashboard/popularAllTimesCarousel.html?raw';
 import genreDashboardHTML from './layouts/dashboard/Genre-dashboard.html?raw';
+import { getCurrentUser, logoutUser } from './layouts/auth/auth-script';
+
+//Function to update the Navbar based on the user's login state
+function initNavbarAuth(){
+  const loginLink = document.getElementById('nav-login-link');
+  const userProfileSection = document.getElementById('nav-user-profile');
+  const usernameDisplay = document.getElementById('nav-username');
+  const logoutBtn = document.getElementById('nav-logout-btn');
+  
+  const currentUser = getCurrentUser();
+
+  if(currentUser){
+    //If user is logged in, show the profile section and hide the login link
+    if(loginLink) loginLink.classList.add('hidden');
+    if (userProfileSection) {
+        userProfileSection.classList.remove('hidden');
+        userProfileSection.classList.add('flex');
+      }
+    if(usernameDisplay) usernameDisplay.textContent = currentUser;
+
+    if(logoutBtn){
+      const newLogoutBtn = logoutBtn.cloneNode(true); //Clone the button to remove old event listeners
+      logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn); //Replace the old button with the new one
+      newLogoutBtn.addEventListener('click', () => {
+        logoutUser();
+        alert('Logged out successfully. Redirecting to homepage...');
+        window.location.href = '../../../index.html'; // Redirect to homepage after logout
+      });
+    }
+  //If no user is logged in, show the login link and hide the profile section
+  } else{
+    if(loginLink) loginLink.classList.remove('hidden');
+    if(userProfileSection){
+      userProfileSection.classList.add('hidden');
+      userProfileSection.classList.remove('flex');
+    }
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Inject the Navbar
   const navbarContainer = document.querySelector('.navbar-content');
   if (navbarContainer) {
     navbarContainer.innerHTML = navbarHTML;
+    initNavbarAuth(); 
   }
 
   // 2. Inject the Background Dashboard
