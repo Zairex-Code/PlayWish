@@ -23,7 +23,7 @@ export function registerUser(username, email, password)
         email: email,
         password: password,
         wishlist: [],
-        gamesExplored: []
+        gamesExplored: 0
     };
 
     //Save the updated users object back to localStorage

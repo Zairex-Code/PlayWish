@@ -2,7 +2,7 @@
 //This script handles the registration logic for the application.
 import { registerUser, loginUser } from './auth-script.js';
 
-const registerForm =  document.getElementById('register-form');
+const registerForm = document.getElementById('register-form')
 
 if(registerForm)
 {
@@ -10,9 +10,9 @@ if(registerForm)
     registerForm.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        const username = document.getElementById('reg-username').value.Trim();
-        const email = document.getElementById('reg-email').value.Trim();
-        const password = document.getElementById('reg-password').value.Trim();
+        const username = document.getElementById('reg-username').value.trim();
+        const email = document.getElementById('reg-email').value.trim();
+        const password = document.getElementById('reg-password').value;
 
         //Validate the input fields
         if(!username || !email || !password)
@@ -42,8 +42,8 @@ if(registerForm)
         if(result.success)
         {
             loginUser(username, password);
-            alert(result.message);
-            window.location.reload(); //Reload the page to reflect the logged-in state
+            alert("Account created! Redirecting to dashboard...");
+            window.location.href = '../../../index.html'; //Reload the page to reflect the logged-in state
         }else
             //Show an error message if registration fails
             alert("Error: " + result.message);
