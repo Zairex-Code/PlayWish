@@ -1,29 +1,58 @@
-//This is the script for the auth layout, 
-//it will be used to handle the login and register forms,
-//and also to handle the authentication process with the Tocken Local Storage.
-const auth = {
-    //This key will be used to store the user session in the local storage,
-    //it will be used to check if the user is logged in or not
-    key : 'user_session',
+//src/layouts/auth/auth-script.js
+//This is the main script that simulates how data is stored in the database.
 
-    //Save the user in the local storage,
-    //it will be called after a successful login or registration
-    save(user){
-        localStorage.setItem(this.key, JSON.stringify(user));
-    },
+//Keys localStorage
+const USERS_KEY = 'playwish_users';
+const SESSION_KEY = 'playwish_currentUser';
 
-    //Get the user from the local storage,
-    //it will be used to check if the user is logged in or not
-    get(){
-        const data = localStorage.getItem(this.key);
-        if(data) return JSON.parse(data);
-        return null;
-    },
+//Function to get all users from localStorage
+export function getAllUsers()
+{
+    return JSON.parse(localStorage.getItem(USERS_KEY)) || {};
+}
 
-    //Remove the user from the local storage,
-    //it will be called when the user logs out
-    remove(){
-        localStorage.removeItem(this.key);
-        location.reload();
-    }
+//function to save a new user to localStorage
+export function registerUser(username, email, password)
+{
+    const users = getAllUsers();
+
+    if(users[username]) return { success: false, message: 'El usuario ya existe. '};
+
+    //Create a new user object
+    users[username] = {
+        email: email,
+        password: password,
+        wishlist: [],
+        gamesExplored: []
+    };
+
+    //Save the updated users object back to localStorage
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+
+    return { success: true, message: 'Usuario registrado exitosamente. '};
+}
+
+//Function to authenticate a user
+export function loginUser(username, password)
+{
+    const users = getAllUsers();
+    const user = users[username];
+
+    if(!user || user.password !== password) return { success: false, message: 'Credenciales inválidas. '};
+
+    localStorage.setItem(SESSION_KEY, username);
+    return { success: true, message: 'Inicio de sesión exitoso. '};
+}
+
+//Function to get the current logged in user
+export function getCurrentUser()
+{
+    return localStorage.getItem(SESSION_KEY);
+}
+
+//Function to log out the current user
+export function logoutUser()
+{
+    localStorage.removeItem(SESSION_KEY);
+    return { success: true, message: 'Cierre de sesión exitoso. '};
 }
