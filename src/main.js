@@ -5,7 +5,8 @@ import {
   getTopRated, 
   getComingSoon, 
   getPopularAllTimes,
-  getGameDetails, 
+  getGameDetails,
+  getGenres, 
 } from './api.js';
 import navbarHTML from './layouts/dashboard/navbar.html?raw';
 import backgroundDashboardHTML from './layouts/dashboard/background-dashboard.html?raw';
@@ -20,6 +21,13 @@ import popularAllTimesHTML from './layouts/dashboard/popularAllTimesCarousel.htm
 import genreDashboardHTML from './layouts/dashboard/Genre-dashboard.html?raw';
 import modalDashboardHTML from './layouts/dashboard/modal.html?raw';
 import { getCurrentUser, logoutUser } from './layouts/auth/auth-script';
+
+let genres = [];
+let trendingNow = [];
+let newReleases = [];
+let topRated = [];
+let comingSoon = [];
+let popularAllTImes = [];
 
 
 // ==========================================
@@ -110,6 +118,21 @@ const createDashboardCarouselHTML = (game) => {
             </div>
             `;
 };
+
+// ==========================================
+// GENRE CARD TEMPLATE (The Factory)
+// ==========================================
+const createGenreCardHTML = (genre) => {
+    return `
+      <a href="#" class="snap-start shrink-0 group relative flex flex-col items-center justify-center bg-gray-900/50 backdrop-blur-sm w-40 h-24 p-4 overflow-hidden rounded-2xl border border-gray-700 hover:border-cyan-500/50 hover:bg-gray-800/80 transition-all duration-300 shadow-lg hover:shadow-cyan-500/20">
+        <div class="absolute inset-0 opacity-20 group-hover:opacity-40 transition-opacity duration-300 pointer-events-none">
+          <img src="${genre.image_background}" class="w-full h-full object-cover" alt="${genre.name}">
+        </div>
+        <h3 class="relative text-white font-bold text-sm tracking-wide group-hover:text-cyan-400 transition-colors z-10">${genre.name}</h3>
+      </a>
+    `;
+};
+
 
 //Function to update the Navbar based on the user's login state
 function initNavbarAuth(){
@@ -289,9 +312,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // 7. Engine For Bottom Horizontal Carousels (Trending, Top Rated)
+  // 7. Engine For Bottom Horizontal Carousels (Trending, Top Rated, Genres)
   // These work with simple horizontal scrolling scrollby()
-  const setupHorizontalCarousel = async (containerClass, htmlContent, trackId, prevBtnId, nextBtnId, fetchFunction) => {
+  // Now accepts an optional 'cardTemplateFactory' to know how to draw the items (Games or Genres)
+  const setupHorizontalCarousel = async (containerClass, htmlContent, trackId, prevBtnId, nextBtnId, fetchFunction, cardTemplateFactory = createGameCardHTML) => {
     const container = document.querySelector(containerClass);
     if(container) {
       // 7.1. Inject initial structure
@@ -303,18 +327,21 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // 7.2. Bring the info through the associated api function
       if(track && fetchFunction){
-        track.innerHTML = '<p class="text-gray-400 p-4 font-medium animate-pulse">Loading games from RAWG...</p>';
+        track.innerHTML = '<div class="w-full flex justify-center py-8"><p class="text-cyan-400 font-bold animate-pulse text-xl">Loading data...</p></div>';
+
         try{
-          const games = await fetchFunction();
-          if (games && games.length>0){
-            // We use join('') to fuse all in a string and inject
-            const cardsHTML = games.map(game => createGameCardHTML(game)).join('');
+
+          const fetchRequest = await fetchFunction();
+          
+          if (fetchRequest && fetchRequest.length > 0){
+            // Use the injected factory function to build the cards (polymorphism)
+            const cardsHTML = fetchRequest.map(response => cardTemplateFactory(response)).join('');
             track.innerHTML = cardsHTML;
           }else{
-            track.innerHTML = '<p class="text-gray-500 p-4">No games found for this section.</p>';
+            track.innerHTML = '<p class="text-gray-500 p-4 w-full text-center">No results found for this section.</p>';
           }
         }catch(error) {
-          track.innerHTML = '<p class="text-red-500 p-4">Failed to load games. Please try again later.</p>';
+          track.innerHTML = '<p class="text-red-500 p-4 w-full text-center">Connection to Database lost. Please try again later.</p>';
         }
       }
 
@@ -330,6 +357,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } 
   };
 
+ 
+
   // 8. Initialization of All Application Carousels
   
   // 8.1 Setup Main Hero Carousel (Calling functions 5 and 6 internally)
@@ -341,13 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
   setupHorizontalCarousel('.top-rated-carousel', topRatedHTML, 'top-rated-track', 'top-rated-prev', 'top-rated-next', getTopRated);
   setupHorizontalCarousel('.coming-soon-carousel', comingSoonHTML, 'coming-soon-track', 'coming-soon-prev', 'coming-soon-next', getComingSoon);
   setupHorizontalCarousel('.popular-all-times-carousel', popularAllTimesHTML, 'popular-track', 'popular-prev', 'popular-next', getPopularAllTimes);
-  
-  // 9. Inject the Browse by Genre
-  const genreContainer = document.querySelector('.genre-dashboard');
-  if(genreContainer){
-    genreContainer.innerHTML = genreDashboardHTML;
-  }
 
+  // 8.3 Setup Genre Carousel (Using the generalized horizontal carousel engine)
+  setupHorizontalCarousel('.genre-dashboard', genreDashboardHTML, 'genre-track', 'genre-prev', 'genre-next', getGenres, createGenreCardHTML);
 
   //10. inject the universal modal
   const body = document.querySelector('body');
@@ -461,13 +486,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
     });
 
-
-
   };
+
+  // ==========================================
+  // CAROUSEL BUTTON GENRE GENERATOR
+  // ==========================================
+
+  const createGenreCarousel = async () => {
+    const genreContainer = document.querySelector('.genre-dashboard');
+    if (genreContainer) {
+      genreContainer.innerHTML = genreDashboardHTML;
+      
+      const track = document.getElementById('genre-track');
+      const prevBtn = document.getElementById('genre-prev');
+      const nextBtn = document.getElementById('genre-next');
+      
+      if (track) {
+        track.innerHTML = '<div class="flex items-center justify-center w-full py-10"><p class="text-cyan-400 font-bold animate-pulse">Loading genres...</p></div>';
+        try {
+          const genresList = await getGenres();
+          if (genresList && genresList.length > 0) {
+            track.innerHTML = genresList.map(genre => `
+              <a href="#" class="snap-start shrink-0 group relative flex flex-col items-center justify-center bg-gray-900/50 backdrop-blur-sm w-40 h-24 p-4 overflow-hidden rounded-2xl border border-gray-700 hover:border-cyan-500/50 hover:bg-gray-800/80 transition-all duration-300 shadow-lg hover:shadow-cyan-500/20">
+                <div class="absolute inset-0 opacity-20 group-hover:opacity-40 transition-opacity duration-300 pointer-events-none">
+                  <img src="${genre.image_background}" class="w-full h-full object-cover" alt="${genre.name}">
+                </div>
+                <h3 class="relative text-white font-bold text-sm tracking-wide group-hover:text-cyan-400 transition-colors z-10">${genre.name}</h3>
+              </a>
+            `).join('');
+
+            if (prevBtn && nextBtn) {
+              nextBtn.addEventListener('click', () => {
+                track.scrollBy({ left: 300, behavior: 'smooth' });
+              });
+              prevBtn.addEventListener('click', () => {
+                track.scrollBy({ left: -300, behavior: 'smooth' });
+              });
+            }
+          } else {
+            track.innerHTML = '<p class="text-gray-500 p-4">No genres found.</p>';
+          }
+        } catch (error) {
+          track.innerHTML = '<p class="text-red-500 p-4">Failed to load genres.</p>';
+        }
+      }
+    }
+  };
+
+
   // Start the modal logic
   initModalLogic();
 
-
+  // Setup Genre Carousel
+  createGenreCarousel();
 
 
 

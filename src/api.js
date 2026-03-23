@@ -94,3 +94,5 @@ export const getGameDetails = async (id) => {
         throw error;
     }
 }
+
+console.log("generes: " , getGenres())
