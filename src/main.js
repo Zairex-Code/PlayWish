@@ -22,12 +22,27 @@ import genreDashboardHTML from './layouts/dashboard/Genre-dashboard.html?raw';
 import modalDashboardHTML from './layouts/dashboard/modal.html?raw';
 import { getCurrentUser, logoutUser } from './layouts/auth/auth-script';
 
-let genres = [];
-let trendingNow = [];
-let newReleases = [];
-let topRated = [];
-let comingSoon = [];
-let popularAllTImes = [];
+let genresList = [];
+let trendingNowList = [];
+let newReleasesList = [];
+let topRatedList= [];
+let comingSoonList = [];
+let popularAllTImesList = [];
+
+
+const initApp = async () => {
+  genresList = await getGenres() 
+  trendingNowList = await getTrendingGames()
+  newReleasesList = await getNewReleases();
+  topRatedList = await getTopRated();
+  comingSoonList = await getComingSoon();
+  popularAllTImesList = await getPopularAllTimes();
+
+  return [genresList , trendingNowList , newReleasesList , topRatedList , comingSoonList , popularAllTImesList];
+  
+}
+
+
 
 
 // ==========================================
@@ -171,7 +186,8 @@ function initNavbarAuth(){
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await initApp();
   // 1. Inject the Navbar
   const navbarContainer = document.querySelector('.navbar-content');
   if (navbarContainer) {
@@ -199,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 5. Main Dashboard Carousel Engine (Hero Jumbotron)
   // Re-structured to fetch data and only activate the arrows logic after finding it
-  const setupDashboardCarousel = async (containerClass, carouselDashboardHTML, fetchFunction) => {
+  const setupDashboardCarousel = async (containerClass, carouselDashboardHTML, itemsList) => {
     const containerOfCarousel = document.querySelector(containerClass);
     if(containerOfCarousel) {
       // 5.1. Inject the static structure into the main container
@@ -208,12 +224,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const track = document.getElementById('carousel-track');
       
       // 5.2. Verify that we have the container (track) and the function to request the games.
-      if(track && fetchFunction){
+      if(track && itemsList){
         // Show a temporary text while fetching the rawg Json
         track.innerHTML = '<div class="flex items-center justify-center p-8 w-full"><p class="text-cyan-400 font-bold animate-pulse text-xl">Loading Hero Games...</p></div>';
         try{
           // 5.3. Wait to receive the games from DB 
-          let games = await fetchFunction();
+          let games = popularAllTImesList;
           
           if (games && games.length > 0){
             // 5.4 Limit the maximum amount in the Main Hero to 5 games for better performance
@@ -315,7 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 7. Engine For Bottom Horizontal Carousels (Trending, Top Rated, Genres)
   // These work with simple horizontal scrolling scrollby()
   // Now accepts an optional 'cardTemplateFactory' to know how to draw the items (Games or Genres)
-  const setupHorizontalCarousel = async (containerClass, htmlContent, trackId, prevBtnId, nextBtnId, fetchFunction, cardTemplateFactory = createGameCardHTML) => {
+  const setupHorizontalCarousel = async (containerClass, htmlContent, trackId, prevBtnId, nextBtnId, itemsList, cardTemplateFactory = createGameCardHTML) => {
     const container = document.querySelector(containerClass);
     if(container) {
       // 7.1. Inject initial structure
@@ -326,16 +342,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const nextBtn = document.getElementById(nextBtnId);
       
       // 7.2. Bring the info through the associated api function
-      if(track && fetchFunction){
+      if(track && itemsList){
         track.innerHTML = '<div class="w-full flex justify-center py-8"><p class="text-cyan-400 font-bold animate-pulse text-xl">Loading data...</p></div>';
 
         try{
 
-          const fetchRequest = await fetchFunction();
+          //const fetchRequest = await fetchFunction();
           
-          if (fetchRequest && fetchRequest.length > 0){
+          if (itemsList && itemsList.length > 0){
             // Use the injected factory function to build the cards (polymorphism)
-            const cardsHTML = fetchRequest.map(response => cardTemplateFactory(response)).join('');
+            const cardsHTML = itemsList.map(item => cardTemplateFactory(item)).join('');
             track.innerHTML = cardsHTML;
           }else{
             track.innerHTML = '<p class="text-gray-500 p-4 w-full text-center">No results found for this section.</p>';
@@ -362,17 +378,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // 8. Initialization of All Application Carousels
   
   // 8.1 Setup Main Hero Carousel (Calling functions 5 and 6 internally)
-  setupDashboardCarousel('.carousel-dashboard', carouselDashboardHTML, getPopularAllTimes);
+  setupDashboardCarousel('.carousel-dashboard', carouselDashboardHTML, popularAllTImesList);
 
   // 8.2 Setup of Minor Carousels (Calling function 7 multiple times)
-  setupHorizontalCarousel('.trending-carousel', trendingCarouselHTML, 'trending-track', 'trending-prev', 'trending-next', getTrendingGames);
-  setupHorizontalCarousel('.new-releases-carousel', newReleasesHTML, 'new-releases-track', 'new-releases-prev', 'new-releases-next', getNewReleases);
-  setupHorizontalCarousel('.top-rated-carousel', topRatedHTML, 'top-rated-track', 'top-rated-prev', 'top-rated-next', getTopRated);
-  setupHorizontalCarousel('.coming-soon-carousel', comingSoonHTML, 'coming-soon-track', 'coming-soon-prev', 'coming-soon-next', getComingSoon);
-  setupHorizontalCarousel('.popular-all-times-carousel', popularAllTimesHTML, 'popular-track', 'popular-prev', 'popular-next', getPopularAllTimes);
+  setupHorizontalCarousel('.trending-carousel', trendingCarouselHTML, 'trending-track', 'trending-prev', 'trending-next', trendingNowList);
+  setupHorizontalCarousel('.new-releases-carousel', newReleasesHTML, 'new-releases-track', 'new-releases-prev', 'new-releases-next', newReleasesList);
+  setupHorizontalCarousel('.top-rated-carousel', topRatedHTML, 'top-rated-track', 'top-rated-prev', 'top-rated-next', topRatedList);
+  setupHorizontalCarousel('.coming-soon-carousel', comingSoonHTML, 'coming-soon-track', 'coming-soon-prev', 'coming-soon-next', comingSoonList);
+  setupHorizontalCarousel('.popular-all-times-carousel', popularAllTimesHTML, 'popular-track', 'popular-prev', 'popular-next', popularAllTImesList);
+
 
   // 8.3 Setup Genre Carousel (Using the generalized horizontal carousel engine)
-  setupHorizontalCarousel('.genre-dashboard', genreDashboardHTML, 'genre-track', 'genre-prev', 'genre-next', getGenres, createGenreCardHTML);
+  setupHorizontalCarousel('.genre-dashboard', genreDashboardHTML, 'genre-track', 'genre-prev', 'genre-next', genresList, createGenreCardHTML);
 
   //10. inject the universal modal
   const body = document.querySelector('body');
@@ -504,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (track) {
         track.innerHTML = '<div class="flex items-center justify-center w-full py-10"><p class="text-cyan-400 font-bold animate-pulse">Loading genres...</p></div>';
         try {
-          const genresList = await getGenres();
+          
           if (genresList && genresList.length > 0) {
             track.innerHTML = genresList.map(genre => `
               <a href="#" class="snap-start shrink-0 group relative flex flex-col items-center justify-center bg-gray-900/50 backdrop-blur-sm w-40 h-24 p-4 overflow-hidden rounded-2xl border border-gray-700 hover:border-cyan-500/50 hover:bg-gray-800/80 transition-all duration-300 shadow-lg hover:shadow-cyan-500/20">
