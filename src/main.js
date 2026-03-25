@@ -439,7 +439,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Inject the rich HTML into the modal
         modalContent.innerHTML = `<div class="relative h-64 w-full">
                     <img src="${game.background_image}" alt="${game.name}" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#1a1d24] via-[#1a1d24]/60 to-transparent"></div>
+                    <div class="absolute inset-0 bg-linear-to-t from-[#1a1d24] via-[#1a1d24]/60 to-transparent"></div>
                     <div class="absolute bottom-4 left-6 flex items-center gap-3">
                         ${score}
                         <span class="text-gray-300 text-sm font-medium border border-gray-600 px-2 py-0.5 rounded-md">${releaseYear}</span>
@@ -454,10 +454,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                         ${description}
                     </div>
 
-                    <div class="mt-6 flex justify-end">
-                        <button class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-2 px-6 rounded-lg transition-colors shadow-[0_0_15px_rgba(34,211,238,0.4)]">
+                    <div class="mt-6 flex justify-end gap-3">
+                        <button class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg transition-colors border border-gray-600">
                             Add to Wishlist
                         </button>
+                        <a href="show.html?id=${game.id}" class="bg-cyan-500 hover:bg-cyan-400 text-black font-extrabold py-2 px-6 rounded-lg transition-colors shadow-[0_0_15px_rgba(34,211,238,0.4)] flex items-center gap-2">
+                            Show More
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                        </a>
                     </div>
                 </div>
         `;
