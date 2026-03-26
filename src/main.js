@@ -228,6 +228,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     const trendingCard = () => {
       // Note that we switch to document.getElementById because you used id="..." in the HTML
+      const trendingCardLink = document.getElementById('trending-card-link');
       const trendingCardBG = document.getElementById('trending-card-bg');
       const trendingCardTitle = document.getElementById('trending-card-title');
       const trendingCardScore = document.getElementById('trending-card-score');
@@ -236,12 +237,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           if(trendingCardTitle) trendingCardTitle.innerHTML = trendingNowList[0].name;
           if(trendingCardScore) trendingCardScore.innerHTML = trendingNowList[0].metacritic ? trendingNowList[0].metacritic : 'N/A';
           if(trendingCardBG) trendingCardBG.style.backgroundImage = `url('${trendingNowList[0].background_image}')`;
+          if(trendingCardLink) trendingCardLink.onclick = (e) => { e.preventDefault(); window.openGameModal(trendingNowList[0].id); };
       }
     }
   
 
     const topRatedCard = () => {
       // Usar getElementById y asegurarnos de que tengan un ID en el HTML
+      const topRatedCardLink = document.getElementById('top-rated-card-link');
       const topRatedCardBg = document.getElementById('top-rated-card-bg');
       const topRatedCardTitle = document.getElementById('top-rated-card-title');
       const topRatedCardScore = document.getElementById('top-rated-card-score');
@@ -249,12 +252,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         if(topRatedCardBg) topRatedCardBg.style.backgroundImage = `url('${topRatedList[0].background_image}')`;
         if(topRatedCardTitle) topRatedCardTitle.innerHTML = topRatedList[0].name;
         if(topRatedCardScore) topRatedCardScore.innerHTML = topRatedList[0].metacritic ? topRatedList[0].metacritic  : "N/A";
+        if(topRatedCardLink) topRatedCardLink.onclick = (e) => { e.preventDefault(); window.openGameModal(topRatedList[0].id); };
       }
       
     }
 
     const lastestDropCard = () => {
       // Usar getElementById y asegurarnos de que tengan un ID en el HTML
+      const lastestDropLink = document.getElementById('lastest-drop-card-link');
       const lastestDropBg = document.getElementById('lastest-drop-card-bg');
       const lastestDropTitle = document.getElementById('lastest-drop-card-title');
       const lastestDropScore = document.getElementById('lastest-drop-card-score');
@@ -264,6 +269,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if(lastestDropBg) lastestDropBg.style.backgroundImage = `url('${newReleasesList[0].background_image}')`  
         if(lastestDropTitle) lastestDropTitle.innerHTML = newReleasesList[0].name;
         if(lastestDropScore) lastestDropScore.innerHTML = newReleasesList[0].released ? `Released ${newReleasesList[0].released}` : "Release date TBA";
+        if(lastestDropLink) lastestDropLink.onclick = (e) => { e.preventDefault(); window.openGameModal(newReleasesList[0].id); };
       }
     }
 
