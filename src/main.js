@@ -214,6 +214,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if(jumbotronContainer){
     jumbotronContainer.innerHTML = jumbotronHTML;
   }
+  
 
   // 4. Inject the Chart Cards
   const chartCardContainer = document.querySelector('.chart-cards')
@@ -223,6 +224,57 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Fetch all API data concurrently AFTER the skeleton UI has been painted
   await initApp();
+  const chartCardLogic = () => {
+    
+    const trendingCard = () => {
+      // Note that we switch to document.getElementById because you used id="..." in the HTML
+      const trendingCardBG = document.getElementById('trending-card-bg');
+      const trendingCardTitle = document.getElementById('trending-card-title');
+      const trendingCardScore = document.getElementById('trending-card-score');
+  
+      if(trendingNowList && trendingNowList.length > 0) {
+          if(trendingCardTitle) trendingCardTitle.innerHTML = trendingNowList[0].name;
+          if(trendingCardScore) trendingCardScore.innerHTML = trendingNowList[0].metacritic ? trendingNowList[0].metacritic : 'N/A';
+          if(trendingCardBG) trendingCardBG.style.backgroundImage = `url('${trendingNowList[0].background_image}')`;
+      }
+    }
+  
+
+    const topRatedCard = () => {
+      // Usar getElementById y asegurarnos de que tengan un ID en el HTML
+      const topRatedCardBg = document.getElementById('top-rated-card-bg');
+      const topRatedCardTitle = document.getElementById('top-rated-card-title');
+      const topRatedCardScore = document.getElementById('top-rated-card-score');
+      if(topRatedList && topRatedList.length > 0) {
+        if(topRatedCardBg) topRatedCardBg.style.backgroundImage = `url('${topRatedList[0].background_image}')`;
+        if(topRatedCardTitle) topRatedCardTitle.innerHTML = topRatedList[0].name;
+        if(topRatedCardScore) topRatedCardScore.innerHTML = topRatedList[0].metacritic ? topRatedList[0].metacritic  : "N/A";
+      }
+      
+    }
+
+    const lastestDropCard = () => {
+      // Usar getElementById y asegurarnos de que tengan un ID en el HTML
+      const lastestDropBg = document.getElementById('lastest-drop-card-bg');
+      const lastestDropTitle = document.getElementById('lastest-drop-card-title');
+      const lastestDropScore = document.getElementById('lastest-drop-card-score');
+
+      if(newReleasesList && newReleasesList.length > 0){
+        // Usar background_image en lugar de image_background (que es exclusiva de Genres)
+        if(lastestDropBg) lastestDropBg.style.backgroundImage = `url('${newReleasesList[0].background_image}')`  
+        if(lastestDropTitle) lastestDropTitle.innerHTML = newReleasesList[0].name;
+        if(lastestDropScore) lastestDropScore.innerHTML = newReleasesList[0].released ? `Released ${newReleasesList[0].released}` : "Release date TBA";
+      }
+    }
+
+    // Ejecutar las funciones internas
+    trendingCard();
+    topRatedCard();
+    lastestDropCard();
+  }
+
+  // Llamar la funcion principal contenedora sin intentar pasar las variables globales como funciones ()
+  chartCardLogic();
 
   // 5. Main Dashboard Carousel Engine (Hero Jumbotron)
   // Re-structured to fetch data and only activate the arrows logic after finding it
