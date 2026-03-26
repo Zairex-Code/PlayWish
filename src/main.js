@@ -31,15 +31,24 @@ let popularAllTImesList = [];
 
 
 const initApp = async () => {
-  genresList = await getGenres() 
-  trendingNowList = await getTrendingGames()
-  newReleasesList = await getNewReleases();
-  topRatedList = await getTopRated();
-  comingSoonList = await getComingSoon();
-  popularAllTImesList = await getPopularAllTimes();
+  // Use Promise.all to fetch all data concurrently instead of sequentially
+  [
+    genresList, 
+    trendingNowList, 
+    newReleasesList, 
+    topRatedList, 
+    comingSoonList, 
+    popularAllTImesList
+  ] = await Promise.all([
+    getGenres(),
+    getTrendingGames(),
+    getNewReleases(),
+    getTopRated(),
+    getComingSoon(),
+    getPopularAllTimes()
+  ]);
 
   return [genresList , trendingNowList , newReleasesList , topRatedList , comingSoonList , popularAllTImesList];
-  
 }
 
 
@@ -187,8 +196,7 @@ function initNavbarAuth(){
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  await initApp();
-  // 1. Inject the Navbar
+  // 1. Inject the Navbar (Render static UI first so user doesn't stare at blank screen)
   const navbarContainer = document.querySelector('.navbar-content');
   if (navbarContainer) {
     navbarContainer.innerHTML = navbarHTML;
@@ -212,6 +220,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   if(chartCardContainer){
     chartCardContainer.innerHTML = chartCardsHTML;
   }
+
+  // Fetch all API data concurrently AFTER the skeleton UI has been painted
+  await initApp();
 
   // 5. Main Dashboard Carousel Engine (Hero Jumbotron)
   // Re-structured to fetch data and only activate the arrows logic after finding it
