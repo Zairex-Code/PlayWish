@@ -19,8 +19,10 @@ import topRatedHTML from './layouts/dashboard/topRatedCarousel.html?raw';
 import comingSoonHTML from './layouts/dashboard/comingSoonCarousel.html?raw';
 import popularAllTimesHTML from './layouts/dashboard/popularAllTimesCarousel.html?raw';
 import genreDashboardHTML from './layouts/dashboard/Genre-dashboard.html?raw';
+import searchModalHTML from './layouts/search/search-modal.html?raw';
+import { initSearchEngine, initNavbarSearch } from './layouts/search/search.js';
 import modalDashboardHTML from './layouts/dashboard/modal.html?raw';
-import { getCurrentUser, logoutUser } from './layouts/auth/auth-script';
+import { getCurrentUser, logoutUser, initNavbarAuth } from './layouts/auth/auth-script';
 
 let genresList = [];
 let trendingNowList = [];
@@ -50,9 +52,6 @@ const initApp = async () => {
 
   return [genresList , trendingNowList , newReleasesList , topRatedList , comingSoonList , popularAllTImesList];
 }
-
-
-
 
 // ==========================================
 //  GAME CARD TEMPLATE (The Factory)
@@ -127,8 +126,6 @@ const createDashboardCarouselHTML = (game) => {
     const genreBadge1 = genre1 ? `<span class="  bg-cyan-400/50 text-gray-300 text-[10px] font-bold px-2.5  mr-4 py-1 rounded-full uppercase">${genre1}</span>` : '';
     const genreBadge2 = genre2 ? `<span class=" bg-cyan-400/50  text-gray-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">${genre2}</span>` : '';
 
-
-
     // 3. HTML Template (Injecting data with ${})
     return `
         <div class="w-full shrink-0 relative group/slide cursor-pointer" onclick="openGameModal(${game.id})">
@@ -158,42 +155,7 @@ const createGenreCardHTML = (genre) => {
 };
 
 
-//Function to update the Navbar based on the user's login state
-function initNavbarAuth(){
-  const loginLink = document.getElementById('nav-login-link');
-  const userProfileSection = document.getElementById('nav-user-profile');
-  const usernameDisplay = document.getElementById('nav-username');
-  const logoutBtn = document.getElementById('nav-logout-btn');
-  
-  const currentUser = getCurrentUser();
 
-  if(currentUser){
-    //If user is logged in, show the profile section and hide the login link
-    if(loginLink) loginLink.classList.add('hidden');
-    if (userProfileSection) {
-        userProfileSection.classList.remove('hidden');
-        userProfileSection.classList.add('flex');
-      }
-    if(usernameDisplay) usernameDisplay.textContent = currentUser;
-
-    if(logoutBtn){
-      const newLogoutBtn = logoutBtn.cloneNode(true); //Clone the button to remove old event listeners
-      logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn); //Replace the old button with the new one
-      newLogoutBtn.addEventListener('click', () => {
-        logoutUser();
-        alert('Logged out successfully. Redirecting to homepage...');
-        window.location.href = '../../../index.html'; // Redirect to homepage after logout
-      });
-    }
-  //If no user is logged in, show the login link and hide the profile section
-  } else{
-    if(loginLink) loginLink.classList.remove('hidden');
-    if(userProfileSection){
-      userProfileSection.classList.add('hidden');
-      userProfileSection.classList.remove('flex');
-    }
-  }
-}
 
 document.addEventListener('DOMContentLoaded', async () => {
   // 1. Inject the Navbar (Render static UI first so user doesn't stare at blank screen)
@@ -201,7 +163,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (navbarContainer) {
     navbarContainer.innerHTML = navbarHTML;
     initNavbarAuth(); 
+    initNavbarSearch();
   }
+
+ 
 
   // 2. Inject the Background Dashboard
   const BackGroundContainer = document.querySelector('.background-dashboard');
@@ -215,6 +180,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     jumbotronContainer.innerHTML = jumbotronHTML;
   }
   
+  const searchModalContainer = document.querySelector('.search-modal-content');
+  if (searchModalContainer) {
+    searchModalContainer.innerHTML = searchModalHTML;
+  }
+  initSearchEngine();
 
   // 4. Inject the Chart Cards
   const chartCardContainer = document.querySelector('.chart-cards')

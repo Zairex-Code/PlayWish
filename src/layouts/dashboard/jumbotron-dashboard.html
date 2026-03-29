@@ -1,23 +1,24 @@
-
-
 <section class="">
     <div class="py-8 w-full text-center lg:py-16">
         <h1 class="mb-6 text-4xl font-bold tracking-tighter text-white md:text-5xl lg:text-6xl">Your Gaming Universe</h1>
         <p class="mb-8 text-base font-normal text-gray-300 md:text-xl">Explore thousands of games, check Metacritic scores, track trends, and build your ultimate wishlist.</p>
         <div class="mt-8">
             
-            <form class="max-w-xl mx-auto">   
-                <label for="search-jumbo" class="mb-2 text-sm font-medium sr-only">Search games</label>
-                <div class="relative">
+            <div class="max-w-xl mx-auto">   
+                <div class="relative pw-search-wrapper">
                     <div class="absolute inset-y-0 start-0 flex items-center ps-4 pointer-events-none">
                         <svg class="w-5 h-5 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
                         </svg>
                     </div>
-                    <input type="search" id="search-jumbo" class="block w-full p-4 ps-12 bg-gray-800/70 backdrop-blur-sm border border-gray-700 text-white text-lg rounded-2xl focus:ring-cyan-500 focus:border-cyan-500 placeholder-gray-400 shadow-xl transition-all" placeholder="Search for a game..." required />
-                    <button type="submit" class="absolute end-2.5 bottom-2.5 text-gray-900 bg-cyan-400 hover:bg-cyan-300 focus:ring-4 focus:outline-none focus:ring-cyan-500/50 font-bold rounded-xl text-sm px-6 py-2.5 transition-colors cursor-pointer ">Search</button>
+                    
+                    <input type="search" autocomplete="off" class="pw-search-input block w-full p-4 ps-12 bg-gray-800/70 backdrop-blur-sm border border-gray-700 text-white text-lg rounded-2xl focus:ring-cyan-500 focus:border-cyan-500 placeholder-gray-400 shadow-xl transition-all" placeholder="Search for a game..." required />
+                    
+                    <button type="button" class="absolute end-2.5 bottom-2.5 text-gray-900 bg-cyan-400 hover:bg-cyan-300 focus:ring-4 focus:outline-none focus:ring-cyan-500/50 font-bold rounded-xl text-sm px-6 py-2.5 transition-colors cursor-pointer">Search</button>
+                    
+                    <div class="search-modal-content absolute top-full left-0 w-full mt-1 z-50"></div>
                 </div>
-            </form>
+            </div>
 
         </div>
     </div>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - PlayWish</title>
+    <link rel="stylesheet" href="../../style.css">
+    <script type="module" src="./results.js"></script>
+</head>
+<body class="bg-[#070b14] min-h-screen font-sans text-white relative overflow-x-hidden">
+    
+    <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl -z-10"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -z-10"></div>
+
+    <div class="navbar-content"></div>
+
+    <main class="container mx-auto max-w-7xl px-6 py-12 mt-20">
+        
+        <div class="mb-10 p-6 bg-gray-900 border border-gray-800 rounded-xl flex items-center justify-between shadow-lg shadow-purple-500/5">
+            <div>
+                <h1 class="text-3xl font-extrabold tracking-tight text-white mb-1">
+                    Search Results for: "<span id="results-query-display" class="text-cyan-400">...</span>"
+                </h1>
+                <p class="text-gray-400 text-sm">Showing 1-12 of 120 results (Sorted by: <span class="text-gray-300 font-medium">Metacritic Score</span>)</p>
+            </div>
+            
+            <div class="flex gap-4">
+                <select id="sort-results" class="bg-gray-800 text-white text-sm rounded-lg px-4 py-2.5 border border-gray-700 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400">
+                    <option value="metacritic">Metacritic Score - High to Low</option>
+                    <option value="released">Release Date - Newest to Oldest</option>
+                    <option value="name">Title - A to Z</option>
+                </select>
+                <button class="bg-gray-800 text-white text-sm font-medium px-4 py-2.5 rounded-lg border border-gray-700 hover:bg-gray-700 transition-colors flex items-center gap-2">
+                    Filter by
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="results-loading" class="hidden flex justify-center py-20">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-cyan-400 blur-[1px]"></div>
+        </div>
+
+        <div id="results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+
+        <div class="mt-16 text-center">
+            <a href="../../../index.html" class="inline-flex items-center gap-2 text-gray-500 hover:text-cyan-400 font-bold transition-colors w-auto py-2 px-6 rounded-lg hover:bg-gray-900 border border-gray-800">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Back to Universe
+            </a>
+        </div>
+    </main>
+</body>
+</html>

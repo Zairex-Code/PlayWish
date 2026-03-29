@@ -1,49 +1,17 @@
+//src/show.js
 import './style.css';
 import { getGameDetails, getGameScreenshots, getGameMovies } from './api.js';
 import navbarHTML from './layouts/dashboard/navbar.html?raw';
-import { getCurrentUser, logoutUser } from './layouts/auth/auth-script';
+
 
 // Initialize Navbar
-function initNavbarAuth() {
-  const loginLink = document.getElementById('nav-login-link');
-  const userProfileSection = document.getElementById('nav-user-profile');
-  const usernameDisplay = document.getElementById('nav-username');
-  const logoutBtn = document.getElementById('nav-logout-btn');
-  
-  const currentUser = getCurrentUser();
-
-  if(currentUser) {
-    if(loginLink) loginLink.classList.add('hidden');
-    if(userProfileSection) {
-        userProfileSection.classList.remove('hidden');
-        userProfileSection.classList.add('flex');
-    }
-    if(usernameDisplay) usernameDisplay.textContent = currentUser;
-
-    if(logoutBtn) {
-      const newLogoutBtn = logoutBtn.cloneNode(true);
-      logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn);
-      newLogoutBtn.addEventListener('click', () => {
-        logoutUser();
-        alert('Logged out successfully. Redirecting to homepage...');
-        window.location.href = './index.html';
-      });
-    }
-  } else {
-    if(loginLink) loginLink.classList.remove('hidden');
-    if(userProfileSection){
-      userProfileSection.classList.add('hidden');
-      userProfileSection.classList.remove('flex');
-    }
-  }
-}
-
 document.addEventListener('DOMContentLoaded', async () => {
     // Inject the Navbar
     const navbarContainer = document.querySelector('.navbar-content');
     if (navbarContainer) {
       navbarContainer.innerHTML = navbarHTML;
       initNavbarAuth(); 
+      initNavbarSearch();
     }
 
     const container = document.getElementById('game-details-container');
