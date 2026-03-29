@@ -131,8 +131,8 @@ const createDashboardCarouselHTML = (game) => {
 
     // 3. HTML Template (Injecting data with ${})
     return `
-        <div class="w-full shrink-0 relative group/slide cursor-pointer">
-                <img src="${game.background_image}" class="absolute inset-0 w-full h-full object-cover group-hover/slide:scale-105 transition-transform duration-1000 ease-out" alt="Cyberpunk 2077">
+        <div class="w-full shrink-0 relative group/slide cursor-pointer" onclick="openGameModal(${game.id})">
+                <img src="${game.background_image}" class="absolute inset-0 w-full h-full object-cover group-hover/slide:scale-105 transition-transform duration-1000 ease-out" alt="${game.name}">
                 <div class="absolute inset-0 bg-linear-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 p-8 md:p-12 w-full transform translate-y-4 group-hover/slide:translate-y-0 transition-transform duration-500">
                     <span class="inline-block px-0 py-1 rounded-full text-xs font-bold gap-4 uppercase mb-3 backdrop-blur-sm">${genreBadge1}${genreBadge2}</span>
@@ -298,8 +298,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         track.innerHTML = '<div class="flex items-center justify-center p-8 w-full"><p class="text-cyan-400 font-bold animate-pulse text-xl">Loading Hero Games...</p></div>';
         try{
           // 5.3. Wait to receive the games from DB 
-          let games = popularAllTImesList;
           
+          let games = popularAllTImesList;
           if (games && games.length > 0){
             // 5.4 Limit the maximum amount in the Main Hero to 5 games for better performance
             games = games.slice(0, 5);
@@ -307,7 +307,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             // 5.5 Build the cards using the factory(template strings) and insert them to the track
             const dashboardCarouselHTML = games.map(game => createDashboardCarouselHTML(game)).join('');
             track.innerHTML = dashboardCarouselHTML;
-
+            console.log("Game", games)
+            
             // 5.6 NOW THAT THEY EXIST: Link the buttons and indexes passing the correct IDs.
             initMainCarouselLogic('carousel-track', 'btn-prev', 'btn-next', 'carousel-dots');
 
