@@ -9,5 +9,6 @@ const WishList = (()=>{
         get: (id) => List._games[id] || {message : "Juego descontinuado o no encontrado"},
         getAll :() => Object.values(List._games)
     }
-})
+})()
+
 export default WishList

@@ -2,7 +2,6 @@ import './style.css';
 import { getGameDetails, getGameScreenshots, getGameMovies } from './api.js';
 import navbarHTML from './layouts/dashboard/navbar.html?raw';
 import { getCurrentUser, logoutUser } from './layouts/auth/auth-script';
-
 // Initialize Navbar
 function initNavbarAuth() {
   const loginLink = document.getElementById('nav-login-link');

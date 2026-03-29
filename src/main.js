@@ -1,4 +1,5 @@
 import './style.css';
+import './layouts/WhisList/ObjGlobalG.js'
 import { 
   getTrendingGames, 
   getNewReleases, 
@@ -21,7 +22,7 @@ import popularAllTimesHTML from './layouts/dashboard/popularAllTimesCarousel.htm
 import genreDashboardHTML from './layouts/dashboard/Genre-dashboard.html?raw';
 import modalDashboardHTML from './layouts/dashboard/modal.html?raw';
 import { getCurrentUser, logoutUser } from './layouts/auth/auth-script';
-
+import WishList from './layouts/WhisList/ObjGlobalG.js';
 let genresList = [];
 let trendingNowList = [];
 let newReleasesList = [];
@@ -524,7 +525,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
 
                     <div class="mt-6 flex justify-end gap-3">
-                        <button class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg transition-colors border border-gray-600">
+                        <button id="modal-add-wishlist" class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg transition-colors border border-gray-600">
                             Add to Wishlist
                         </button>
                         <a href="show.html?id=${game.id}" class="bg-cyan-500 hover:bg-cyan-400 text-black font-extrabold py-2 px-6 rounded-lg transition-colors shadow-[0_0_15px_rgba(34,211,238,0.4)] flex items-center gap-2">
@@ -534,7 +535,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 </div>
         `;
+        const addBtn = document.getElementById('modal-add-wishlist');
+        if (addBtn) {
+            addBtn.addEventListener('click', () => {
+                WishList.set(game.id, {
+                    id: game.id,
+                    name: game.name,
+                    image: game.background_image,
+                    released: releaseYear
+                });
 
+                addBtn.innerHTML = "Added! ✅";
+                addBtn.classList.replace('bg-gray-800', 'bg-green-600');
+                addBtn.disabled = true;
+
+                console.log("Juegos en WishList:", WishList.getAll());
+            });
+        }
+        
       }catch(error){
             modalContent.innerHTML = `
                 <div class="h-64 flex items-center justify-center flex-col gap-2">
@@ -544,7 +562,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
       }
     };
-
     const closeModal = () =>{
       // Trigger the reverse animation (Fade out & Scale down)
       backdrop.classList.remove('opacity-100');
@@ -633,3 +650,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 });
+document.addEventListener('', (e) => {
+
+})
