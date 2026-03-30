@@ -1,0 +1,30 @@
+<!-- ==========================================
+     WISHLIST SECTION — solo estructura HTML
+     ========================================== -->
+
+<!-- SECTION HEADER -->
+<section class="max-w-7xl mx-auto px-6 pt-10 pb-4 flex items-center justify-between">
+  <div>
+    <p class="text-gray-500 text-xs uppercase tracking-widest mb-1">Your collection</p>
+    <h2 class="text-3xl font-extrabold text-white">My <span class="text-cyan-400">WishList</span></h2>
+  </div>
+  <span id="wl-count" class="bg-cyan-400/10 text-cyan-400 border border-cyan-400/30 text-xs font-bold px-3 py-1 rounded-full">
+    0 games
+  </span>
+</section>
+
+<!-- EMPTY STATE -->
+<div id="wl-empty" class="hidden max-w-7xl mx-auto px-6 flex-col items-center justify-center py-24 text-center">
+  <div class="w-20 h-20 mb-5 rounded-full bg-gray-800/60 flex items-center justify-center mx-auto">
+    <svg class="w-9 h-9 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+    </svg>
+  </div>
+  <h3 class="text-2xl font-bold text-gray-500 mb-2">Your WishList is empty</h3>
+  <p class="text-gray-600 text-sm">Explore games and add them from the modal.</p>
+</div>
+
+<!-- GAME GRID — JS inyecta las cards aquí -->
+<div id="wl-grid" class="max-w-7xl mx-auto px-6 pb-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+</div>

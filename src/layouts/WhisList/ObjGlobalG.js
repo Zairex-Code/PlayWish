@@ -7,7 +7,8 @@ const WishList = (()=>{
     return{
         set: (id, game) =>List._games[id] = {...game, updatedAt : new Date()},
         get: (id) => List._games[id] || {message : "Juego descontinuado o no encontrado"},
-        getAll :() => Object.values(List._games)
+        getAll :() => Object.values(List._games),
+        remove: (id)       => delete List._games[id]
     }
 })()
 

@@ -651,6 +651,3 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 });
-document.addEventListener('', (e) => {
-
-})
